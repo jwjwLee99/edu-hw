@@ -18,24 +18,9 @@
 	<head>
 	<meta charset="UTF-8">
 	<title>커뮤니티 - 글쓰기</title>
-	<style>
-	input[type="textarea"] {
-		resize : none; 
-		height : 200px;
-	}
-	</style>
 	</head>
 	<body>
 		<h2>커뮤니티 - 글쓰기</h2>
-		<!-- 
-			form action : write_ok.jsp
-			작성자 : session.getAttribute("userid")
-			제목 : b_title
-			내용 : b_content
-			
-			write_ok.jsp -> list.jsp 이동
-			db insert
-		 -->
 		 
 		 <form action="./write_ok.jsp" method="post" name="writeform">
 		 	<p>
@@ -45,7 +30,10 @@
 		 	제목<input type="text" name="title" id="title">
 		 	</p>
 		 	<p>
-		 		내용<input type="textarea" name="content" id="content">
+		 		내용
+		 	</p>
+		 	<p>
+		 		<textarea rows="5" cols="40" name="content"></textarea>
 		 	</p>
 		 	<p>
 		 		<input type="submit" value="작성 완료">

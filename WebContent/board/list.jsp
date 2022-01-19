@@ -6,11 +6,14 @@
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
+	ResultSet rs1 = null;
 	
 	String name = (String)session.getAttribute("name");
 	
 	String sql = "";
+	
 	int totalCount = 0;
+	int r_count = 0;
 	String title = "";
 	int hit = 0;
 	int like = 0;
@@ -27,6 +30,8 @@
 			if(rs.next()){
 				totalCount = rs.getInt("total");
 			}
+			
+			
 			
 			sql = "select b_index, b_userid, b_title, b_regdate, b_hit, b_like from tb_board order by b_index desc";
 			pstmt = conn.prepareStatement(sql);
@@ -49,7 +54,7 @@
 <body>
 	<h2>커뮤티니 - 리스트</h2>
 	<p>게시글 <%=totalCount %>개</p>
-	<table border='1' width='800'>
+	<table border='1' width='900'>
 		<tr>
 			<th width="50">번호</th>
 			<th width="300">제목</th>
@@ -60,16 +65,34 @@
 		</tr>
 <%
 	while(rs.next()){
-		String b_index = rs.getString("b_index");
+		String index = rs.getString("b_index");
 		String b_userid = rs.getString("b_userid");
 		String b_title = rs.getString("b_title");
 		String b_regdate = rs.getString("b_regdate");
 		String b_hit = rs.getString("b_hit");
 		String b_like = rs.getString("b_like");
+		
+		sql = "select count(r_boardindex) as total from tb_reply where r_boardindex=?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, index);
+		rs1 = pstmt.executeQuery();
+		
+		if(rs1.next()){
+			r_count = rs1.getInt("total");
+		}
 %>
 		<tr>
-			<td><%=b_index %></td>
-			<td><a href="./view.jsp?b_index=<%=b_index%>"><%=b_title %></a></td>
+			<td><%=index%></td>
+			<td>
+				<a href="./view.jsp?index=<%=index%>"><%=b_title %></a>
+				<%
+					if(r_count > 0){
+				%>
+					(<%=r_count %>)
+				<%
+					}
+				%>
+			</td>
 			<td><%=b_userid %></td>
 			<td><%=b_hit %></td>
 			<td><%=b_regdate %></td>
@@ -81,7 +104,7 @@
 	</table>
 	<p>
 		<button onclick="location.href='write.jsp'">글쓰기</button>
-		<button onclick="location.href='login.jsp'">메인</button>
+		<button onclick="location.href='../login.jsp'">메인</button>
 	</p>
 	
 </body>
